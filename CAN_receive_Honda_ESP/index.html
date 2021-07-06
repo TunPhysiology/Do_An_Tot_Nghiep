@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+  <title>Do an tot nghiep</title>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <style>
+    body{
+      background-color: #808080;
+    }
+
+    .button{
+      width: 200px;
+      height: 120px;
+      margin:5px 5px;
+    
+    }
+  </style>
+
+<body>
+	<div style="text-align:center;font-size: 22px;color: White;">
+		<b>Giám sát hành trình xe và cảnh báo người lái</b> <br> <b style="font-size: 16px;">Honda City 2016</b>
+	</div>
+   
+
+    <div>
+        <button class="button"><b style="font-size: 17px;">Engine Speed (rpm)</b>
+        	<div id='val' style="color:Tomato;font-size: 30px;"></div></button>
+      
+      	<button class="button" style="background-color: Orange;"><b style="font-size: 17px;">Car Speed (km/h)</b>
+        	<div id='vl' style="color:Black;font-size: 30px;"></div></button>
+
+      	<button class="button" style="background-color: DodgerBlue;"><b style="font-size: 17px;">Gas Pendal</b>
+        	<div id='vl2' style="color:Cornsilk;font-size: 30px;"></div></button>
+      
+      	<button class="button" style="background-color: SlateBlue;"><b style="font-size: 17px;">Load</b>
+        	<div id='vl3' style="color:Cornsilk;font-size: 30px;"></div></button>
+
+        <button class="button" style="background-color: White;position: absolute;width: 450px;height: 120px">
+          <b><pan id="thongbaore" style="font-size: 15px;"><pan></b><br>
+          <b><pan id="thongbaolanglach" style="font-size: 15px;"><pan></b><br>
+          <b><pan id="batthuong" style="font-size: 15px;"><pan></b><br>
+          <b id="brake" style="font-size: 15px;background: red;"></b>
+        </button>
+
+    </div>
+
+
+    <div>
+      	<button id= 'chart-rpm' style="width: 630px;height: 400px;  margin:10px"></button>
+
+        <button id= 'chart-speed' style="width: 630px;height: 400px;margin:10px"></button>	
+	</div>
+  <div>
+        <button id= 'lanlach' style="width: 630px;height: 400px;margin:10px"></button>
+
+        <button id= 'chartX' style="width: 630px;height: 400px;margin:10px"></button>
+ 
+  </div>
+</body>
+
+<script>
+  window.onload = updataA4();
+
+var chartT1 = new Highcharts.Chart({
+    chart: { renderTo: 'chart-rpm' },
+    title: { text: 'Delta Rpm' },
+    series: [{
+        showInLegend: false,
+        data: []
+    }],
+    plotOptions: {
+        line: {
+            animation: false,
+            dataLabels: { enabled: true }
+        },
+        series: { color: '#059e8a' }
+    },
+    xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { second: '%H:%M:%S' }
+    },
+    yAxis: {
+        title: { text: 'Engine Speed (rpm)' }
+    },
+    credits: { enabled: false }
+});
+setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var x = (new Date()).getTime(),
+                y = parseFloat(this.responseText);
+
+            if (chartT1.series[0].data.length > 40) {
+                chartT1.series[0].addPoint([x, y], true, true, true);
+            } else {
+                chartT1.series[0].addPoint([x, y], true, false, true);
+            }
+        }
+    };
+    xhttp.open("GET", "/a1.html", true);
+    xhttp.send();
+}, 500);
+
+var chartT2 = new Highcharts.Chart({
+    chart: { renderTo: 'chart-speed' },
+    title: { text: 'Delta Speed' },
+    series: [{
+        showInLegend: false,
+        data: []
+    }],
+    plotOptions: {
+        line: {
+            animation: false,
+            dataLabels: { enabled: true }
+        },
+        series: { color: '#00008B' }
+    },
+    xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { second: '%H:%M:%S' }
+    },
+    yAxis: {
+        title: { text: 'Speed (Km/h)' }
+    },
+    credits: { enabled: false }
+});
+setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var x = (new Date()).getTime(),
+                y = parseFloat(this.responseText);
+
+            if (chartT2.series[0].data.length > 40) {
+                chartT2.series[0].addPoint([x, y], true, true, true);
+            } else {
+                chartT2.series[0].addPoint([x, y], true, false, true);
+            }
+        }
+    };
+    xhttp.open("GET", "/a2.html", true);
+    xhttp.send();
+}, 500);
+
+
+var chartT3 = new Highcharts.Chart({
+    chart: { renderTo: 'lanlach' },
+    title: { text: 'Gyroscope Z' },
+    series: [{
+        showInLegend: false,
+        data: []
+    }],
+    plotOptions: {
+        line: {
+            animation: false,
+            dataLabels: { enabled: true }
+        },
+        series: { color: '#FFD700' }
+    },
+    xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { second: '%H:%M:%S' }
+    },
+    yAxis: {
+        title: { text: 'Rad/s' }
+    },
+    credits: { enabled: false }
+});
+setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var x = (new Date()).getTime(),
+                y = parseFloat(this.responseText);
+
+            if (chartT3.series[0].data.length > 40) {
+                chartT3.series[0].addPoint([x, y], true, true, true);
+            } else {
+                chartT3.series[0].addPoint([x, y], true, false, true);
+            }
+        }
+    };
+    xhttp.open("GET", "/a3.html", true);
+    xhttp.send();
+}, 500);
+
+
+var chartT4 = new Highcharts.Chart({
+    chart: { renderTo: 'chartX' },
+    title: { text: 'Acceleration Y' },
+    series: [{
+        showInLegend: false,
+        data: []
+    }],
+    plotOptions: {
+        line: {
+            animation: false,
+            dataLabels: { enabled: true }
+        },
+        series: { color: '#4B0082' }
+    },
+    xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { second: '%H:%M:%S' }
+    },
+    yAxis: {
+        title: { text: 'm/s2' }
+    },
+    credits: { enabled: false }
+});
+setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var x = (new Date()).getTime(),
+                y = parseFloat(this.responseText);
+
+            if (chartT4.series[0].data.length > 40) {
+                chartT4.series[0].addPoint([x, y], true, true, true);
+            } else {
+                chartT4.series[0].addPoint([x, y], true, false, true);
+            }
+        }
+    };
+    xhttp.open("GET", "/a4.html", true);
+    xhttp.send();
+}, 500);
+
+  function updataA4() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if(this.readyState == 4 && this.status == 200)
+      { 
+        var txt = this.responseText;
+        var obj = JSON.parse(txt);
+        document.getElementById('thongbaore').innerHTML = obj.re;
+        document.getElementById('thongbaolanglach').innerHTML = obj.LANGLACH;
+        document.getElementById('batthuong').innerHTML = obj.canhbao;
+        document.getElementById('brake').innerHTML = obj.brake;
+        document.getElementById('val').innerHTML = obj.rpm;
+        document.getElementById('vl').innerHTML = obj.carspeed; 
+        document.getElementById('vl2').innerHTML = obj.gaspendal+'%';
+        document.getElementById('vl3').innerHTML = obj.load+'%'; 
+        updataA4();     
+      }
+    }
+    xhttp.open('GET','/a0.html',true);
+    xhttp.send();
+  }
+
+
+
+  
+
+</script>
+
+</html>
